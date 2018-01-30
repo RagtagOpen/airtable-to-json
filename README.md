@@ -34,5 +34,6 @@ install dependencies for deployment package:
     - `S3_FILENAME` - destination filename (default airtable.json)
     - `ACL` - access control for S3 file (default public-read)
     - `CACHE_HOURS` - set Expires header to this many hours in future (default 6)
+    - `AIRTABLE_VIEW` - AirTable view id (from https://airtable.com/api)
 - test the Lambda function; verify it creates `S3_BUCKET/S3_FILENAME`
 - use the JSON file in your app
