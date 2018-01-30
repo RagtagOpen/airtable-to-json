@@ -34,6 +34,8 @@ def load_data():
     '''
     rval = {'updated': datetime.now().isoformat()}
     params = {}
+    if os.environ.get('AIRTABLE_VIEW', None):
+        params['view'] = os.environ.get['AIRTABLE_VIEW']
     req = requests.get(API_URL, headers=AUTH, params=params)
     rval = req.json()
     data = req.json()
