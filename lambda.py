@@ -21,9 +21,17 @@ import os
 
 import boto3
 import requests
+import urllib
 
-API_URL = 'https://api.airtable.com/v0/%s/%s' % (
-    os.environ['AIRTABLE_APP'], os.environ['AIRTABLE_TABLE'])
+url_params = ''
+if os.environ.get('AIRTABLE_FIELDS', None):
+    FIELDS = os.environ['AIRTABLE_FIELDS']
+    FIELDS_ARRAY = FIELDS.split(':');
+    fields_params = {'fields[]': FIELDS_ARRAY}
+    url_encoded_fields = urllib.urlencode(fields_params, True)
+    url_params = '?%s' % (url_encoded_fields)
+API_URL = 'https://api.airtable.com/v0/%s/%s%s' % (
+    os.environ['AIRTABLE_APP'], os.environ['AIRTABLE_TABLE'], url_params)
 AUTH = {'Authorization': 'Bearer %s' % os.environ['AIRTABLE_TOKEN']}
 FILENAME = os.environ.get('S3_FILENAME', 'airtable.json')
 BUCKET = os.environ['S3_BUCKET']
@@ -53,6 +61,7 @@ def write_json(data):
     '''
         write to S3 bucket
     '''
+
     s3 = boto3.resource('s3')
     print('put %s/%s' % (BUCKET, FILENAME))
     hours = int(os.environ.get('CACHE_HOURS', 6))
